@@ -1,0 +1,29 @@
+{
+  "name": "angular-ngrx-api",
+  "version": "1.0.0",
+  "description": "node api for angular-ngrx project",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/1ogon1/angular-ngrx-api.git"
+  },
+  "author": "Ruslan Konovalenko <konovalenkoruslan@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/1ogon1/angular-ngrx-api/issues"
+  },
+  "homepage": "https://github.com/1ogon1/angular-ngrx-api#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.0.6",
+    "morgan": "^1.10.0",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0"
+  }
+}
