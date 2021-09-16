@@ -30,6 +30,4 @@ app.use(bodyParser.json())
 app.use('/api/auth', authRouter)
 app.use('/api/user', userRouter)
 
-console.log(config)
-
 module.exports = app
