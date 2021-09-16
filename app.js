@@ -11,7 +11,10 @@ const authRouter = require('./routes/auth')
 const userRouter = require('./routes/user')
 
 mongoose
-  .connect(config.mongoDbUrl)
+  .connect(config.mongoDbUrl, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => {
     console.log('MogoDB connected')
   })
