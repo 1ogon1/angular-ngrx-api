@@ -27,6 +27,12 @@ module.exports.login = async (request, response) => {
 }
 
 module.exports.register = async (request, response) => {
+  if (!request.body.email || !request.body.username || !request.body.password) {
+    return response.status(409).json({
+      message: 'Invalid input data',
+    })
+  }
+
   const candidate = await User.findOne({
     email: request.body.email,
   })

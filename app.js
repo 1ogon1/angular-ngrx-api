@@ -1,8 +1,9 @@
+const cors = require('cors')
 const express = require('express')
-const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const passport = require('passport')
-const path = require('path')
+const bodyParser = require('body-parser')
+
 const config = require('./config/config')
 
 const app = express()
@@ -26,7 +27,9 @@ require('./middleware/passport')(passport)
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
-app.use(require('cors')())
+
+app.options('*', cors())
+app.use(cors({ optionsSuccessStatus: 200, allowedHeaders: true }))
 
 app.use('/api/auth', authRouter)
 app.use('/api/user', userRouter)
