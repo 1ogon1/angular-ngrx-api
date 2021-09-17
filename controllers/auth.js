@@ -1,9 +1,12 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const { StatusCodes } = require('http-status-codes')
+const { validationResult } = require('express-validator')
 
-const config = require('../config/config')
 const User = require('../models/User')
-const errorHandler = require('../utils/error-handler')
+const config = require('../config/config')
+const catchErrorHandler = require('../utils/catch-error-handler')
+const validationErrorHandler = require('../utils/validation-error-handler')
 
 module.exports.login = async (request, response) => {
   const candidate = await User.findOne({
@@ -11,26 +14,17 @@ module.exports.login = async (request, response) => {
   })
 
   if (candidate && bcrypt.compareSync(request.body.password, candidate.password)) {
-    const token = jwt.sign(
-      {
-        email: candidate.email,
-        userId: candidate._id,
-      },
-      config.secretKey,
-      { expiresIn: 60 * 60 }
-    )
-
-    response.status(200).json({ token: `Bearer ${token}` })
+    return response.status(StatusCodes.OK).json({ token: getToken(candidate.email, candidate._id) })
   }
 
-  response.status(403).json({ message: 'Wrong login data' })
+  response.status(StatusCodes.BAD_REQUEST).json(validationErrorHandler('Wrong login data'))
 }
 
 module.exports.register = async (request, response) => {
-  if (!request.body.email || !request.body.username || !request.body.password) {
-    return response.status(409).json({
-      message: 'Invalid input data',
-    })
+  const error = validationResult(request)
+
+  if (!error.isEmpty()) {
+    return response.status(StatusCodes.BAD_REQUEST).json(validationErrorHandler('Invalid input data', error))
   }
 
   const candidate = await User.findOne({
@@ -38,13 +32,13 @@ module.exports.register = async (request, response) => {
   })
 
   if (candidate) {
-    return response.status(409).json({
-      message: 'User with this email already exists',
-    })
+    return response.status(StatusCodes.BAD_REQUEST).json(validationErrorHandler('User with this email already exists'))
   }
 
   const salt = bcrypt.genSaltSync(10)
   const user = new User({
+    bio: null,
+    image: null,
     email: request.body.email,
     username: request.body.username,
     password: bcrypt.hashSync(request.body.password, salt),
@@ -52,8 +46,28 @@ module.exports.register = async (request, response) => {
 
   try {
     await user.save()
-    response.status(201).json(user)
+    response.status(StatusCodes.CREATED).json({
+      user:
+      {
+        id: user._id,
+        bio: user.bio, 
+        image: user.image, 
+        email: user.email, 
+        username: user.username, 
+        token: getToken(user.email, user._id)
+      }
+    })
   } catch (e) {
-    errorHandler(response, e)
+    catchErrorHandler(response, e)
   }
+}
+
+function getToken(email, userId) {
+  const token = jwt.sign(
+    { email, userId },
+    config.secretKey,
+    { expiresIn: 60 * 60 }
+  )
+
+  return `Bearer ${token}`
 }

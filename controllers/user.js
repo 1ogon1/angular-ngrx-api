@@ -1,5 +1,6 @@
 const User = require('../models/User')
-const errorHandler = require('../utils/error-handler')
+const catchErrorHandler = require('../utils/catch-error-handler')
+const validationErrorHandler = require('../utils/validation-error-handler')
 
 module.exports.getById = async (request, response) => {
   try {
@@ -12,10 +13,8 @@ module.exports.getById = async (request, response) => {
       }
     }
 
-    return response.status(404).json({
-      message: 'User not found',
-    })
+    return response.status(404).json(validationErrorHandler('User not found'))
   } catch (e) {
-    errorHandler(response, e)
+    catchErrorHandler(response, e)
   }
 }

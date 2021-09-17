@@ -21,10 +21,7 @@ const userScheme = new scheme({
   },
   image: {
     type: String,
-  },
-  token: {
-    type: String,
-  },
+  }
 })
 
 module.exports = mongoose.model('users', userScheme)
