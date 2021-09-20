@@ -9,12 +9,29 @@ const catchErrorHandler = require('../utils/catch-error-handler')
 const validationErrorHandler = require('../utils/validation-error-handler')
 
 module.exports.login = async (request, response) => {
+  const error = validationResult(request)
+
+  console.log({error: error.array()});
+  if (!error.isEmpty()) {
+    return response.status(StatusCodes.BAD_REQUEST).json(validationErrorHandler('Invalid input data', error))
+  }
+
   const candidate = await User.findOne({
-    email: require.body.email,
+    email: request.body.email,
   })
 
   if (candidate && bcrypt.compareSync(request.body.password, candidate.password)) {
-    return response.status(StatusCodes.OK).json({ token: getToken(candidate.email, candidate._id) })
+    return response.status(StatusCodes.OK).json({
+      user:
+      {
+        id: candidate._id,
+        bio: candidate.bio, 
+        image: candidate.image, 
+        email: candidate.email, 
+        username: candidate.username, 
+        token: getToken(candidate.email, candidate._id)
+      }
+    })
   }
 
   response.status(StatusCodes.BAD_REQUEST).json(validationErrorHandler('Wrong login data'))

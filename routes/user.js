@@ -1,7 +1,10 @@
 const express = require('express')
-const router = express.Router()
+const passport = require('passport')
 const controller = require('../controllers/user')
 
-router.get('/:id', controller.getById)
+const router = express.Router()
+
+router.get('/', passport.authenticate('jwt', { session: false }), controller.getCurrentUser)
+router.get('/:id', passport.authenticate('jwt', { session: false }), controller.getById)
 
 module.exports = router

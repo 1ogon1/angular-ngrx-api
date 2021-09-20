@@ -31,29 +31,6 @@ app.use(bodyParser.json())
 app.options('*', cors())
 app.use(cors({ optionsSuccessStatus: 200, allowedHeaders: true }))
 
-// app.use((req, res, next) => {
-//   let _validationErrors = req.validationErrors;
-
-//   req.validationErrors = (mapped, promisesResolved) => {
-//     const errors = _validationErrors.call(this, mapped, promisesResolved)
-//     const newErrors = [];
-
-//     errors.forEach(error => {
-//       console.log({error});
-//       if (!newErrors.some(errItem => error.param === errItem.param)) {
-//         newErrors.push(error);
-//       }
-//     });
-
-//     console.log({newErrors});
-//     return newErrors;
-//   };
-
-//   console.log('req.validationErrors', req.validationErrors);
-
-//   next();
-// });
-
 app.use('/api/auth', authRouter)
 app.use('/api/user', userRouter)
 

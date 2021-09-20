@@ -1,9 +1,11 @@
-const User = require('../../models/User')
 const { check } = require('express-validator')
-const { emailValidator } = require('./base.validators')
+
+const User = require('../../models/User')
 
 module.exports = [
-    emailValidator
+    check('email', 'Invalid email address')
+        .notEmpty()
+        .isEmail()
         .custom(async (email) => {
             const user = await User.findOne({ email })
 
