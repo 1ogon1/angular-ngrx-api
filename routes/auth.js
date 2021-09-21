@@ -8,4 +8,7 @@ const router = express.Router()
 router.post('/login', loginValidattors, controller.login)
 router.post('/register', registerValidators, controller.register)
 
-module.exports = router
+module.exports = module.exports = {
+    router,
+    route: 'auth'
+}

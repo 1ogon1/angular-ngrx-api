@@ -30,8 +30,12 @@ module.exports.getCurrentUser = async (request, response) => {
 module.exports.getById = async (request, response) => {
   try {
     if (request.params.id) {
-      const user = await User.findById(request.params.id)
+      const user = await User.findById(request.params.id).populate('articles')
+      //  User.findById(request.params.id).populate('articles').exec(function(e, a) {
+      //    console.log(a);
+      //  })
 
+      return response.status(200).json(user)
       if (user) {
         return response.status(200).json({
           user:
@@ -40,7 +44,8 @@ module.exports.getById = async (request, response) => {
             bio: user.bio,
             image: user.image,
             email: user.email,
-            username: user.username
+            username: user.username,
+            articles: user.articles
           }
         })
       }

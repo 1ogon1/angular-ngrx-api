@@ -1,7 +1,9 @@
 const mongoose = require('mongoose')
-const scheme = mongoose.Schema
 
-const userScheme = new scheme({
+const dbKeys = require('./shared/db.keys')
+const dateModel = require('./shared/date.model')
+
+const userScheme = new mongoose.Schema({
   email: {
     type: String,
     required: true,
@@ -21,7 +23,10 @@ const userScheme = new scheme({
   },
   image: {
     type: String,
-  }
+  },
+  ...dateModel,
+  articles: [{ type: mongoose.Schema.Types.ObjectId, ref: dbKeys.article }],
+  favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: dbKeys.favorite }]
 })
 
-module.exports = mongoose.model('users', userScheme)
+module.exports = mongoose.model(dbKeys.user, userScheme)

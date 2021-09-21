@@ -7,4 +7,7 @@ const router = express.Router()
 router.get('/', passport.authenticate('jwt', { session: false }), controller.getCurrentUser)
 router.get('/:id', passport.authenticate('jwt', { session: false }), controller.getById)
 
-module.exports = router
+module.exports = module.exports = {
+    router,
+    route: 'user'
+}
