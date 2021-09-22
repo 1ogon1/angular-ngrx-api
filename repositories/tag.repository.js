@@ -32,3 +32,7 @@ module.exports.create = async ({ name }) => {
         }
     }
 }
+
+module.exports.getPopularList = () => {
+
+}
