@@ -16,7 +16,8 @@ const articleScheme = new mongoose.Schema({
     },
     ...mediaMidel,
     tags: [{ type: mongoose.Schema.Types.ObjectId, ref: dbKeys.tag }],
-    author: { type: mongoose.Schema.Types.ObjectId, ref: dbKeys.user }
+    author: { type: mongoose.Schema.Types.ObjectId, ref: dbKeys.user },
+    favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: dbKeys.favorites }]
 })
 
 module.exports = mongoose.model(dbKeys.article, articleScheme)

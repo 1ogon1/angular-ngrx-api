@@ -9,6 +9,9 @@ const tagScheme = new mongoose.Schema({
         required: true,
         unique: true,
     },
+    rating: {
+        type: Number
+    },
     ...mediaMidel,
     articles: [{ type: mongoose.Schema.Types.ObjectId, ref: dbKeys.article }]
 })

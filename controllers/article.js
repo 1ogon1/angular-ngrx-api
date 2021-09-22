@@ -1,50 +1,55 @@
 const { StatusCodes } = require('http-status-codes')
 
-const Article = require('../models/Article')
-const dbKeys = require('../models/shared/db.keys')
-const User = require('../models/User')
-const catchErrorHandler = require('../utils/catch-error-handler')
-
-let page = 1
-let itemsPerPage = 25
+const Pagination = require('../utils/pagination')
+const repositoryStatus = require('../utils/repositoryStatus')
+const repository = require('../repositories/article.repository')
+const { catchError, validationError } = require('../utils/errorHandler')
 
 module.exports.getList = async (request, response) => {
     try {
-        initPagination(request)
+        const result = await repository.getList(new Pagination(request.query), request.user.id)
 
-        const articles = await Article.find().populate('author');
-
-        console.log(articles);
-
-        return response.status(StatusCodes.OK).json(articles)
+        switch (result.status) {
+            case repositoryStatus.success:
+                return response.status(StatusCodes.OK).json(result.data)
+            case repositoryStatus.notFound:
+                return response.status(StatusCodes.NOT_FOUND).json(validationError(result.message))
+            case repositoryStatus.exception:
+                return response.status(StatusCodes.BAD_REQUEST).json(validationError(result.message))
+        }
     } catch (e) {
-        catchErrorHandler(response.e)
+        catchError(response, e)
     }
-}
-
-function initPagination(request) {
-    page = (request.params.page && request.params.page > 1) || page;
-    itemsPerPage = request.params.itemsPerPage || itemsPerPage
 }
 
 module.exports.create = async (request, response) => {
     try {
-        const author = await User.findById(request.user.id)
-        const article = new Article({
-            author: author._id,
-            body: request.body.body,
-            slug: request.body.title,
-            title: request.body.title,
-            active: request.body.active || true,
-            description: request.body.description,
-        })
-        author.articles.push(article);
+        const result = await repository.create(request.body, request.user.id)
 
-        await article.save()
-        await author.save()
-
-        response.status(StatusCodes.CREATED).json({ slug: article.slug })
+        switch (result.status) {
+            case repositoryStatus.success:
+                return response.status(StatusCodes.CREATED).json(result.data)
+            case repositoryStatus.exception:
+                return response.status(StatusCodes.BAD_REQUEST).json(validationError(result.message))
+        }
     } catch (e) {
-        catchErrorHandler(response, e)
+        catchError(response, e)
+    }
+}
+
+module.exports.favorite = async (request, response) => {
+    try {
+        const result = await repository.favorite(request.body.id, request.user.id)
+
+        switch (result.status) {
+            case repositoryStatus.success:
+                return response.status(StatusCodes.OK).json()
+            case repositoryStatus.notFound:
+                return response.status(StatusCodes.NOT_FOUND).json(validationError(result.message))
+            case repositoryStatus.exception:
+                return response.status(StatusCodes.BAD_REQUEST).json(validationError(result.message))
+        }
+    } catch (e) {
+        catchError(response, e)
     }
 }

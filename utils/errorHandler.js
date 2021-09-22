@@ -1,6 +1,8 @@
+const { StatusCodes } = require("http-status-codes")
+
 const ErrorModel = require("../infrastructure/models/error.model")
 
-module.exports = (message, errors, onlyFirstError = true) => {
+const validationError = (message, errors, onlyFirstError = true) => {
     const messages = []
 
     errors && errors.array({ onlyFirstError }).forEach(({ msg, param }) => {
@@ -20,3 +22,9 @@ module.exports = (message, errors, onlyFirstError = true) => {
 
     return new ErrorModel(message || 'An unhandled error has occurred', messages)
 }
+
+module.exports.catchError = (response, e) => {
+  response.status(StatusCodes.INTERNAL_SERVER_ERROR).json(validationError(e.message))
+}
+
+module.exports.validationError = validationError
