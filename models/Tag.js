@@ -10,7 +10,8 @@ const tagScheme = new mongoose.Schema({
         unique: true,
     },
     rating: {
-        type: Number
+        type: Number,
+        default: 0
     },
     ...mediaMidel,
     articles: [{ type: mongoose.Schema.Types.ObjectId, ref: dbKeys.article }]

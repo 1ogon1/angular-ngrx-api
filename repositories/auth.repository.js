@@ -73,6 +73,6 @@ function getToken(email, userId) {
     return jwt.sign(
         { email, userId },
         config.secretKey,
-        { expiresIn: 60 * 60 }
+        { expiresIn: 60 * 60 * 60 }
     )
 }

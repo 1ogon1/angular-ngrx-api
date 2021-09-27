@@ -24,7 +24,9 @@ const validationError = (message, errors, onlyFirstError = true) => {
 }
 
 module.exports.catchError = (response, e) => {
-  response.status(StatusCodes.INTERNAL_SERVER_ERROR).json(validationError(e.message))
+    console.log(JSON.stringify(e, undefined, 2))
+
+    response.status(StatusCodes.INTERNAL_SERVER_ERROR).json(validationError(e.message))
 }
 
 module.exports.validationError = validationError

@@ -14,7 +14,7 @@ module.exports.create = async ({ name }) => {
 
         tag = new Tag({
             name,
-            slug: data.name
+            slug: name
         })
 
         await tag.save()
@@ -26,13 +26,47 @@ module.exports.create = async ({ name }) => {
             }
         }
     } catch (e) {
+        console.log(e);
         return {
             status: status.exception,
-            message: 'Failed to create user'
+            message: 'Failed to create tag'
         }
     }
 }
 
-module.exports.getPopularList = () => {
+module.exports.getPopularList = async () => {
+    try {
+        const tags = await Tag.find().sort({ rating: -1 }).limit(20)
 
+        return {
+            status: status.success,
+            data: {
+                tags: tags.map(tag => ({
+                    id: tag._id,
+                    name: tag.name,
+                    slug: tag.slug
+                }))
+            }
+        }
+    } catch (e) {
+        return {
+            status: status.exception,
+            message: 'Failed to get the list of tags'
+        }
+    }
+}
+
+module.exports.updateRating = async (id) => {
+    try {
+        const tag = await Tag.findById(id)
+
+        if (tag) {
+            tag.rating += 1
+            tag.updatedAt = new Date()
+
+            await tag.save()
+        }
+    } catch (e) {
+        console.log(e);
+    }
 }
