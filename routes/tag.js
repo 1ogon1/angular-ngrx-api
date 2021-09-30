@@ -9,5 +9,5 @@ router.post('/', passport.authenticate('jwt', { session: false }), controller.cr
 
 module.exports = module.exports = {
     router,
-    route: 'tag'
+    route: 'tags'
 }

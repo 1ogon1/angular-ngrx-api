@@ -1,0 +1,476 @@
+{
+    "api": {
+        "path": "/api",
+        "auth": {
+            "path": "/auth",
+            "login": {
+                "path": "/login",
+                "method": "post",
+                "authorization": "false",
+                "description": "sign in to application",
+                "bodyParams": {
+                    "email": {
+                        "type": "string",
+                        "description": "user email",
+                        "options": {
+                            "required": "true"
+                        }
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "user password",
+                        "options": {
+                            "required": "true"
+                        }
+                    }
+                },
+                "response": [
+                    {
+                        "statusCode": 200,
+                        "status": "OK",
+                        "data": {
+                            "user": {
+                                "id": {
+                                    "type": "string",
+                                    "description": "user id"
+                                },
+                                "bio": {
+                                    "type": "string | null",
+                                    "description": "user bio"
+                                },
+                                "image": {
+                                    "type": "string | null",
+                                    "description": "user logo image"
+                                },
+                                "email": {
+                                    "type": "string",
+                                    "description": "user email"
+                                },
+                                "username": {
+                                    "type": "string",
+                                    "description": "user name"
+                                },
+                                "token": {
+                                    "type": "string",
+                                    "description": "authorization token"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "statusCode": 400,
+                        "status": "BAD_REQUEST",
+                        "data": {
+                            "message": {
+                                "type": "string | null",
+                                "description": "error title"
+                            },
+                            "errors": {
+                                "type": "array | null",
+                                "description": "list of errors"
+                            }
+                        }
+                    }
+                ]
+            },
+            "register": {
+                "path": "/register",
+                "method": "post",
+                "authorization": "false",
+                "description": "sign up to application",
+                "bodyParams": {
+                    "username": {
+                        "type": "string",
+                        "description": "user name",
+                        "options": {
+                            "required": "true"
+                        }
+                    },
+                    "email": {
+                        "type": "string",
+                        "description": "user email",
+                        "options": {
+                            "required": "true"
+                        }
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "user password",
+                        "options": {
+                            "required": "true"
+                        }
+                    }
+                },
+                "response": [
+                    {
+                        "statusCode": 201,
+                        "status": "CREATED",
+                        "data": {
+                            "user": {
+                                "id": {
+                                    "type": "string",
+                                    "description": "user id"
+                                },
+                                "bio": {
+                                    "type": "string | null",
+                                    "description": "user bio"
+                                },
+                                "image": {
+                                    "type": "string | null",
+                                    "description": "user logo image"
+                                },
+                                "email": {
+                                    "type": "string",
+                                    "description": "user email"
+                                },
+                                "username": {
+                                    "type": "string",
+                                    "description": "user name"
+                                },
+                                "token": {
+                                    "type": "string",
+                                    "description": "authorization token"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "statusCode": 400,
+                        "status": "BAD_REQUEST",
+                        "data": {
+                            "message": {
+                                "type": "string | null",
+                                "description": "error title"
+                            },
+                            "errors": {
+                                "type": "array | null",
+                                "description": "list of errors"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        "articles": {
+            "path": "/articles",
+            "getList": {
+                "path": "/",
+                "method": "get",
+                "authorization": "false",
+                "description": "return list of articles",
+                "queryParams": {
+                    "tag": {
+                        "type": "string | null",
+                        "description": "filter articles list by tag id"
+                    },
+                    "page": {
+                        "type": "number | null(first page)",
+                        "description": "current page value"
+                    },
+                    "itemsPerPage": {
+                        "type": "number | null(default 10)",
+                        "description": "items per page value"
+                    }
+                },
+                "response": {
+                    "articles": [
+                        {
+                            "id": {
+                                "type": "string",
+                                "description": "article id"
+                            },
+                            "slug": {
+                                "type": "string",
+                                "description": "article slug"
+                            },
+                            "title": {
+                                "type": "string",
+                                "description": "article title"
+                            },
+                            "description": {
+                                "type": "string",
+                                "description": "article description"
+                            },
+                            "createdAt": {
+                                "type": "string(date)",
+                                "description": "article date create"
+                            },
+                            "favorites": {
+                                "type": "number",
+                                "description": "article liked count"
+                            },
+                            "favorided": {
+                                "type": "boolean",
+                                "description": "true if current user favorited article"
+                            },
+                            "tags": [
+                                {
+                                    "id": {
+                                        "type": "string",
+                                        "description": "tag id"
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "description": "tag title"
+                                    }
+                                }
+                            ],
+                            "author": {
+                                "id": {
+                                    "type": "string",
+                                    "description": "user id"
+                                },
+                                "image": {
+                                    "type": "string",
+                                    "description": "user logo image"
+                                },
+                                "username": {
+                                    "type": "string",
+                                    "description": "user name"
+                                }
+                            }
+                        }
+                    ]
+                }
+            },
+            /*develop*/
+            "getUserList": {
+                "path": "/feed",
+                "method": "get",
+                "authorization": "true",
+                "description": "return list of user followed articles",
+                "queryParams": {},
+                "response": {}
+            },
+            "create": {
+                "path": "/",
+                "method": "post",
+                "authorization": "true",
+                "description": "create article",
+                "bodyParams": {
+                    "title": {
+                        "type": "string",
+                        "description": "article title",
+                        "options": {
+                            "required": "true"
+                        }
+                    },
+                    "description": {
+                        "type": "string | null",
+                        "description": "article short description"
+                    },
+                    "active": {
+                        "type": "boolean",
+                        "description": "article active status"
+                    },
+                    "body": {
+                        "type": "string | null",
+                        "description": "article content"
+                    }
+                },
+                "response": [
+                    {
+                        "statusCode": 200,
+                        "data": {
+                            "slug": {
+                                "type": "string",
+                                "description": "article slug"
+                            }
+                        }
+                    }
+                ]
+            },
+            "addTag": {
+                "path": "/tag",
+                "method": "patch",
+                "authorization": "true",
+                "description": "add tag to article",
+                "bodyParams": {
+                    "articleId": {
+                        "type": "string",
+                        "description": "article id",
+                        "options": {
+                            "required": "true"
+                        }
+                    },
+                    "tagId": {
+                        "type": "string",
+                        "description": "tag id",
+                        "options": {
+                            "required": "true"
+                        }
+                    }
+                },
+                "response": [
+                    {
+                        "statusCode": 200,
+                        "data": null
+                    }
+                ]
+            },
+            "favorite": {
+                "path": "/favorite",
+                "method": "patch",
+                "authorization": "true",
+                "description": "add article to favorite",
+                "bodyParams": {
+                    "id": {
+                        "type": "string",
+                        "description": "article id",
+                        "options": {
+                            "required": "true"
+                        }
+                    }
+                },
+                "response": [
+                    {
+                        "statusCode": 200,
+                        "data": null
+                    }
+                ]
+            }
+        },
+        "tags": {
+            "path": "/tags",
+            "getPopularList": {
+                "path": "/",
+                "method": "get",
+                "authorization": "true",
+                "description": "get popular tag list (first 20 items)",
+                "queryParams": null,
+                "response": [
+                    {
+                        "statusCode": 200,
+                        "data": {
+                            "tags": [
+                                {
+                                    "id": {
+                                        "type": "string",
+                                        "description": "tag id"
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "description": "tag name"
+                                    },
+                                    "slug": {
+                                        "type": "tag slug",
+                                        "description": "tag id"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "create": {
+                "path": "/",
+                "method": "post",
+                "authorization": "true",
+                "description": "create tag",
+                "bodyParams": {
+                    "name": {
+                        "type": "string",
+                        "description": "tag name",
+                        "options": {
+                            "required": "true"
+                        }
+                    }
+                },
+                "response": [
+                    {
+                        "statusCode": 200,
+                        "data": {
+                            "slug": {
+                                "type": "string",
+                                "description": "tag slug"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        "user": {
+            "path": "/user",
+            "getCurrentUser": {
+                "path": "/",
+                "method": "get",
+                "authorization": "true",
+                "description": "get current user",
+                "queryParams": null,
+                "response": [
+                    {
+                        "statusCode": 200,
+                        "data": {
+                            "user": {
+                                "id": {
+                                    "type": "string",
+                                    "description": "user id"
+                                },
+                                "bio": {
+                                    "type": "string | null",
+                                    "description": "user bio"
+                                },
+                                "image": {
+                                    "type": "string | null",
+                                    "description": "user logo image"
+                                },
+                                "email": {
+                                    "type": "string",
+                                    "description": "user email"
+                                },
+                                "username": {
+                                    "type": "string",
+                                    "description": "user name"
+                                },
+                                "token": {
+                                    "type": "string",
+                                    "description": "authorization token"
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+            "getUser": {
+                "path": "/:id",
+                "method": "get",
+                "authorization": "true",
+                "description": "get user by id",
+                "queryParams": null,
+                "response": [
+                    {
+                        "statusCode": 200,
+                        "data": {
+                            "user": {
+                                "id": {
+                                    "type": "string",
+                                    "description": "user id"
+                                },
+                                "bio": {
+                                    "type": "string | null",
+                                    "description": "user bio"
+                                },
+                                "image": {
+                                    "type": "string | null",
+                                    "description": "user logo image"
+                                },
+                                "email": {
+                                    "type": "string",
+                                    "description": "user email"
+                                },
+                                "username": {
+                                    "type": "string",
+                                    "description": "user name"
+                                },
+                                "token": {
+                                    "type": "string",
+                                    "description": "authorization token"
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}
