@@ -12,8 +12,6 @@ module.exports.getList = async (request, response) => {
         switch (result.status) {
             case repositoryStatus.success:
                 return response.status(StatusCodes.OK).json(result.data)
-            case repositoryStatus.notFound:
-                return response.status(StatusCodes.NOT_FOUND).json(validationError(result.message))
             case repositoryStatus.exception:
                 return response.status(StatusCodes.BAD_REQUEST).json(validationError(result.message))
         }

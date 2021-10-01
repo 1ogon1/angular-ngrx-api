@@ -32,43 +32,35 @@ module.exports.getList = async (pagination, currentUserId, tagId) => {
             }
         }, '_id name')
 
-        console.log(tags);
-        if (articles) {
-            return {
-                status: status.success,
-                data: {
-                    articles: articles.map(article => ({
-                        id: article._id,
-                        slug: article.slug,
-                        title: article.title,
-                        description: article.description,
-                        createdAt: article.createdAt,
-                        favorites: article.favorites?.length || 0,
-                        favorided: favorites?.some(f => f.userId == currentUserId && f.articleId == `${article._id}`),
-                        tags: article
-                            .tags?.map(at => {
-                                const tag = tags.find(t => `${t._id}` == `${at}`)
-
-                                return tag ? {
-                                    id: tag._id,
-                                    name: tag.name
-                                } : null
-                            })
-                            .filter(t => t != null),
-                        author: {
-                            id: article.author._id,
-                            image: article.author.image,
-                            username: article.author.username
-                        }
-                    })),
-                    articlesCount: await Article.count()
-                }
-            }
-        }
-
         return {
-            status: status.notFound,
-            message: 'Articles not found'
+            status: status.success,
+            data: {
+                articles: articles.map(article => ({
+                    id: article._id,
+                    slug: article.slug,
+                    title: article.title,
+                    description: article.description,
+                    createdAt: article.createdAt,
+                    favorites: article.favorites?.length || 0,
+                    favorided: favorites?.some(f => f.userId == currentUserId && f.articleId == `${article._id}`),
+                    tags: article
+                        .tags?.map(at => {
+                            const tag = tags.find(t => `${t._id}` == `${at}`)
+
+                            return tag ? {
+                                id: tag._id,
+                                name: tag.name
+                            } : null
+                        })
+                        .filter(t => t != null),
+                    author: {
+                        id: article.author._id,
+                        image: article.author.image,
+                        username: article.author.username
+                    }
+                })),
+                articlesCount: await Article.count()
+            }
         }
     } catch (e) {
         console.log(e)
